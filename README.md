@@ -10,7 +10,8 @@ whether a flight will be delayed or not.
 
 To imporve our model and visuals, we would need coordinates (lat/long) to visualise the flight paths. 
 
-'Combined_Flights_2022' doesn't contain coordinates for the visualisation, and therefore, I used a separate dataset contained in the package 'flightplot'to extract lat & long. 
+'Combined_Flights_2022' doesn't contain coordinates for the visualisation, and therefore, I used a separate dataset contained in the package 'flightplot' to extract lat & long. 
+Note: we have approximately 8,000 entries missing due to combining datasets to extract lat/long. 
 <img width="846" height="420" alt="image" src="https://github.com/user-attachments/assets/fa8dd333-69cf-47aa-92b2-6cf7a79061dd" />
 
 # Exploratory Data Analysis (EDA) 
