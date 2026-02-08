@@ -176,20 +176,26 @@ modelsvm <- svm(Delayed ~ ., data = train, cost = 100, gamma = 0.1)
 
 summary(modelsvm)
 
-# example test sample to assess how well the model predicts
+# test a sample to assess how well the model predicts
+airports <- train[,3:4]
+airports <- as.vector(as.matrix(unique(airports)))  
 
-predicted_values <- predict(modelsvm, test[1:39566,1:17])
+test <- test %>% filter(Origin == airports) %>% 
+  filter(Dest == airports)
+
+
+predicted_values <- predict(modelsvm, test[,1:17])
 summary(predicted_values)
 predicted_values <- as.data.frame(predicted_values)
 
-test <- test[1:39294,]
+test <- test[1:593,]
 # confusion matrix
 table(test$Delayed, predicted_values$predicted_values)
 
 # accuracy 
-accuracy <- (12176 + 8916) / (12176 + 8578 + 9624 + 8916) 
+accuracy <- (226 + 145) / (226+105+117+145) 
 print(accuracy)
-# 53% 
+# 62.5% 
 
 # visualise the delayed (>3 hours) flights 
 
