@@ -14,12 +14,14 @@ To imporve our model and visuals, we would need coordinates (lat/long) to visual
 
 Note: we have approximately 8,000 entries missing due to combining datasets to extract lat/long. 
 
+
 <img width="846" height="420" alt="image" src="https://github.com/user-attachments/assets/fa8dd333-69cf-47aa-92b2-6cf7a79061dd" />
 
 # Exploratory Data Analysis (EDA) 
 Data transformation & EDA are a crucial part of building custom ML models. Without these 2, one wouldn't know which attributes to use / exclude for training datasets and test against the model outputs. 
 
 I wanted to visualise which airlines have the highest miles to understand whether these airlines have a pattern of delays: 
+
 
 <img width="4251" height="2677" alt="miles" src="https://github.com/user-attachments/assets/512d9a50-c2c9-449c-ac4e-e87aff3e5ca3" />
 
@@ -40,7 +42,7 @@ Additionally, I added coordinates information, weekday and months based on the d
 As this is a custom ML model built on my local machine, I could only train 1% of the dataset due to the low processing power of my macbook.
 Despite the high volume (~4 millions entries) of 'Combined_Flights_2022', it still lacks key information like 'Weather', 'Wind speed', 'Traffic control related information', which could prove useful in our training dataset. 
 
-'Combined_Flights_2022' also only **7-months** of the data, so the training dataset won't be able to pick any key seasonal patterns. 
+'Combined_Flights_2022' also only contains **7-months** of the data, so the training dataset won't be able to pick any key seasonal patterns. 
 
 # Model summary
 Call:
@@ -63,8 +65,9 @@ Levels:
  No Yes
  
 # Model results
-Despite training the model on only 1% of the total 'Combined_Flights_2022', the model accuracy from the confusion matrix was 53%. 
+Despite training the model on only 1% of the total 'Combined_Flights_2022', the model accuracy from the confusion matrix was 62.5% when tested on a small sample from the Testing dataset.  
 Other Classification matrics like 'Recall' & 'Precision' can also be calculated from the confusion matrix to assess the overall model performance. 
+
 
 <img width="926" height="356" alt="image" src="https://github.com/user-attachments/assets/f0af5f89-ac12-4e68-8735-32465b02fbaa" />
 
