@@ -10,28 +10,6 @@ plot_flights(sample_trips)
 # make an inner join with the 'airports' IATA column
 flights <- Combined_Flights_2022 %>% select(,1:16, -11, -12, -14)
 
-# check if 'origin' & 'dest' airports can be joined with 'airports'
-df1 <- flights %>% select(,3:4)
-df1 <- as.vector(as.matrix(df1))
-df1 <- as.data.frame(unique(df1)) 
-print(df1)
-df1 <- df1 %>% rename(code = 'unique(df1)')
-
-# pull the ariport code, lat & lon columns
-df2 <- airports %>% select(,5, 7, 8)
-df2 <- df2 %>% rename(code = 'IATA')
-
-df1 <- df2 %>% inner_join(df1)
-# re-join with the main 'flights' dataset
-df1 <- df1 %>% rename(Dest = 'code')
-flights <- df1 %>% inner_join(flights)
-
-# re-position the columns
-flights <- flights %>% relocate(Dest, Latitude, Longtitude, .after = Origin)
-# optional - write the dataset containing lat & lon 
-setwd("~/Documents/R/Datasets")
-write.csv(flights, "flights.csv")
-
 # EDA
 # add day & month
 flights <- flights %>% mutate(day = wday(FlightDate, label = TRUE))
@@ -51,7 +29,6 @@ flights <- flights %>% filter(between(DepDelayMinutes, 0,3000))
 
 # find unique combinations for each Airline (Origin & Dest)
 unique(flights[,c('Airline','Origin','Dest')])
-
 
 # duplicate 'flights' for model building
 model <- flights[,2:18]
@@ -197,19 +174,81 @@ accuracy <- (226 + 145) / (226+105+117+145)
 print(accuracy)
 # 62.5% 
 
-# visualise the delayed (>3 hours) flights 
+# add coordinates for Origin & Destination ariports from the flightplot package
+
+coord <- flightplot::airports
+coord <- coord %>% select(,5,7,8)
+# ORIGIN
+origin_coords <- flights %>% select(,3,9)
+
+origin_coords <- origin_coords %>% rename(IATA = Origin)
+origin_coords <- origin_coords %>% inner_join(coord)
+origin_coords <- origin_coords %>% rename(ori_lat = Latitude)
+origin_coords <- origin_coords %>% rename(ori_lon = Longtitude)
+
+# DESTINATION
+dest_coords <- flights %>% select(,4,9)
+
+dest_coords <- dest_coords %>% rename(IATA = Dest)
+dest_coords <- dest_coords %>% inner_join(coord)
+
+coordinates <- cbind(origin_coords, dest_coords)
+coordinates <- coordinates %>% select(,1,2,3,4,7,8)
+
+# visualise the flights paths of severely delayed flights >24 hrs
+
+# remove NA's & outliers
+coordinates <- coordinates %>% filter(DepDelayMinutes != 'NA')
+coordinates <- coordinates %>% filter(between(DepDelayMinutes, 0,3000))
+
+coordinates <- coordinates %>% filter(DepDelayMinutes > 1500)
+
+origin <- data.frame(lng = coordinates$ori_lon, lat = coordinates$ori_lat)
+dest <- data.frame(lng = coordinates$Longtitude, lat = coordinates$Latitude )
+
+# add connecting lines between origin & destination ariports
+coordinates <- coordinates %>% mutate(id = row_number())
+# subsets 
+df1 <- coordinates %>% select(id, ori_lat, ori_lon)
+df1 <- df1 %>% rename(lat = ori_lat, lon = ori_lon)
+
+df2 <- coordinates %>% select(id, Latitude, Longtitude)
+df2 <- df2 %>% rename(lat = Latitude, lon = Longtitude)
+
+df.sp <- bind_rows(df1, df2)
+
+library(sp)
+
+# convert df.sp to a spatial dataframe
+coordinates(df.sp) <- c('lon', 'lat')
+
+#create a list per id
+id.list <- sp::split( df.sp, df.sp[["id"]] )
+
+id <- 1
+# FUNCTION - for each id, create a line that connects all points with that id
+
+for ( i in id.list ) {
+  event.lines <- SpatialLines( list( Lines( Line( i[1]@coords ), ID = id ) ),
+                               proj4string = CRS( "+init=epsg:4326" ) )
+  if ( id == 1 ) {
+    sp_lines  <- event.lines
+  } else {
+    sp_lines <- rbind( sp_lines, event.lines )
+  }
+  id <- id + 1
+}
 
 library(leaflet)
-model <- model %>% filter(DepDelayMinutes > 180)
-circles <- data.frame(lng = model$Longtitude, lat = model$Latitude)
 
 map <- leaflet() %>% 
   addTiles() %>%
-  addCircleMarkers(data = circles, color = "red", weight = 1, radius = 2) %>% 
-  setView(lng = -94.3674, lat = 35.3366, zoom = 2.5) %>% 
-  addPolylines(lng = model$Longtitude, lat=model$Latitude, weight=1, 
-               opacity=0.5, color="blue")
-
+  addCircles(data = origin, color = "red", weight = 1.5, radius = 2) %>% 
+  addCircles(data = dest, color = 'blue', weight = 1.5, radius = 2) %>% 
+  addPolylines(data = sp_lines, weight = 1, opacity = 0.3,
+               color = 'grey') %>%
+  setView(lng = -94.3674, lat = 35.3366, zoom = 2.5)
+  
 map
 
 library(mapview)
