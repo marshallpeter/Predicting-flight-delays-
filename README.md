@@ -12,10 +12,6 @@ To imporve our model and visuals, we would need coordinates (lat/long) to visual
 
 'Combined_Flights_2022' doesn't contain coordinates for the visualisation, and therefore, I used a separate dataset contained in the package 'flightplot' to extract lat & long. 
 
-Note: we have approximately 8,000 entries missing due to combining datasets to extract lat/long. 
-
-
-<img width="846" height="420" alt="image" src="https://github.com/user-attachments/assets/fa8dd333-69cf-47aa-92b2-6cf7a79061dd" />
 
 # Exploratory Data Analysis (EDA) 
 Data transformation & EDA are a crucial part of building custom ML models. Without these 2, one wouldn't know which attributes to use / exclude for training datasets and test against the model outputs. 
@@ -36,7 +32,7 @@ I also wanted to capture a snapshot of the delayed flights based on distance:
 # Model
 To predict whether a flight will be delayed, our training dataset needs to contain as much information about a flight as possible. 
 The 'Combined_Flights_2022' is a rich dataset with millions of entries contianing key information on 'Airtime', 'Departure Delay', 'Distance', 'Ariports'.
-Additionally, I added coordinates information, weekday and months based on the dates to add to the training dataset. 
+Additionally, I added weekday and months based on the dates to add to the training dataset. 
 
 # Limitations 
 As this is a custom ML model built on my local machine, I could only train 1% of the dataset due to the low processing power of my macbook.
@@ -77,7 +73,8 @@ Other Classification matrics like 'Recall' & 'Precision' can also be calculated 
 2. Apply 'tuning' to identify the best values for cost & gamma
 3. Additional sources of data such as 'weather', 'wind speed' and 'traffic control related data' could've yielded much better results
 
-# Visualising flight destinations of the flights delayed by >3 hours
-<img width="992" height="744" alt="flight_path" src="https://github.com/user-attachments/assets/ff628de6-f2ad-4acf-8680-aeb86515337c" />
+# Visualising severely delayed flights (over 24 hrs)
+<img width="992" height="744" alt="flight_path" src="https://github.com/user-attachments/assets/bf5e830b-09fa-44be-91e9-a699a088e44b" />
+
 
 
