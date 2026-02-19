@@ -21,15 +21,11 @@ I wanted to visualise which airlines have the highest miles to understand whethe
 
 <img width="4251" height="2677" alt="miles" src="https://github.com/user-attachments/assets/512d9a50-c2c9-449c-ac4e-e87aff3e5ca3" />
 
-Median flight delay across States 
-
 <img width="4251" height="2677" alt="d_flights_map" src="https://github.com/user-attachments/assets/c3675565-2da0-4ee9-950e-45ff44c07d1b" />
 
 I also added 'weekday' & 'month' columns to visualise delays by weekdays to understand any concrete patterns: 
 
 <img width="4251" height="2677" alt="week" src="https://github.com/user-attachments/assets/c437da50-1db1-4de4-9587-3e3a539a87d8" />
-
-A snapshot of the delayed flights based on distance:
 
 <img width="4251" height="2677" alt="distance" src="https://github.com/user-attachments/assets/16aa6bf4-d835-471c-bc3b-4312e8748cea" />
 
