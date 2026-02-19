@@ -1,8 +1,9 @@
 # Predicting-flight-delays-
 Building a custom ML model to predict whether a flight will be delayed or not
 
-Dataset:
+Datasets:
 https://www.kaggle.com/datasets/robikscube/flight-delay-dataset-20182022/data?select=Combined_Flights_2022.csv
+https://catalog.data.gov/dataset/tiger-line-shapefile-current-nation-u-s-state-and-equivalent-entities
 
 **Context:**
 For this project, I used a large flights dataset to build a custom machine learing model using **Support Vector Machines (SVMs)** algorithm to predict
