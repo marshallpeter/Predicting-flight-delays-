@@ -80,6 +80,47 @@ miles <- ggplot(top_airlines) + geom_hline(
 
 miles
 
+# visualise flights delayed >3 hrs 
+# shapefile: https://catalog.data.gov/dataset/tiger-line-shapefile-current-nation-u-s-state-and-equivalent-entities
+
+library(sf)
+US_shp <- read_sf("")
+
+US_shp <- US_shp %>% filter(NAME != 'Hawaii')   
+US_shp <- US_shp %>% filter(NAME != 'Alaska') 
+US_shp <- US_shp %>% filter(NAME != 'United States Virgin Islands')
+US_shp <- US_shp %>% filter(NAME != 'Puerto Rico')
+US_shp <- US_shp %>% filter(NAME != 'Commonwealth of the Northern Mariana Islands')
+US_shp <- US_shp %>% filter(NAME != 'Guam')
+US_shp <- US_shp %>% filter(NAME != 'American Samoa')
+plot(st_geometry(US_shp))
+
+delayed_flights <- Combined_Flights_2022 %>% select(,9,36)
+delayed_flights <- delayed_flights %>% filter(DepDelayMinutes >120)
+delayed_flights <- delayed_flights %>% group_by(OriginState) %>% arrange(OriginState)
+delayed_flights <- delayed_flights %>% mutate(hrs = DepDelayMinutes/60)
+delayed_flights <- delayed_flights %>% filter(between(hrs, 3,50))
+delayed_flights <- delayed_flights %>% group_by(OriginState) %>% summarise(median(hrs))
+delayed_flights <- delayed_flights %>% rename(hrs = `median(hrs)`)
+
+delayed_flights <- delayed_flights %>% rename(STUSPS = OriginState)
+
+# join it with the US_shp to get the coordinates
+delayed_flights <- US_shp %>% inner_join(delayed_flights)
+
+d_flights_map <- ggplot(delayed_flights) +
+  geom_sf(aes(fill = hrs), lwd = 0.2, color = "white") + 
+  labs(
+    title = "Median flight delay across different states",
+    subtitle = "Delay recoreded at the departure airport") + 
+  theme(plot.title = element_text(face = 'bold'),
+        panel.background = element_blank(), 
+        axis.text = element_blank(),
+        axis.ticks = element_blank()) +
+ scale_fill_viridis_c() 
+
+d_flights_map
+
 # flight delay based on day of the week
 week <- model %>% filter(DepDelayMinutes >180) %>% 
   group_by(FlightDate, day) %>% summarise(mean(DepDelayMinutes)) %>% 
