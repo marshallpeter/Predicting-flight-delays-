@@ -75,7 +75,7 @@ Other Classification matrics like 'Recall' & 'Precision' can also be calculated 
 2. Apply 'tuning' to identify the best values for cost & gamma
 3. Additional sources of data such as 'weather', 'wind speed' and 'traffic control related data' could've yielded much better results
 
-# Visualising severely delayed flight paths (over 24 hrs)
+# Visualising severely delayed flight paths over 24 hrs (origin airport red | destination airport blue) 
 <img width="992" height="744" alt="flight_path" src="https://github.com/user-attachments/assets/bf5e830b-09fa-44be-91e9-a699a088e44b" />
 
 
